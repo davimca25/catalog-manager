@@ -1,0 +1,10 @@
+spring.application.name=auth-service
+server.port=8080
+
+spring.datasource.url=jdbc:postgresql://localhost:5433/authservice
+spring.datasource.username=USER
+spring.datasource.password=PASSWORD
+
+spring.jpa.hibernate.ddl-auto=update
+
+api.security.token.secret=SECRET_KEY
