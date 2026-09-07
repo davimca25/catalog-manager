@@ -17,6 +17,12 @@ import java.util.UUID;
 @Table(name = "tb_order_items")
 public class OrderItem {
 
+    public OrderItem(Product product, Integer quantity) {
+        this.product = product;
+        this.quantity = quantity;
+        this.price = product.getPrice();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

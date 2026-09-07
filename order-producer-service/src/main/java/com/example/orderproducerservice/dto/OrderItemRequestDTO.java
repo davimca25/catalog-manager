@@ -2,5 +2,6 @@ package com.example.orderproducerservice.dto;
 
 import java.util.UUID;
 
-public record OrderItemRequestDTO(UUID productId, Integer quantity) {
+public record OrderItemRequestDTO(UUID productId,
+                                  Integer quantity) {
 }

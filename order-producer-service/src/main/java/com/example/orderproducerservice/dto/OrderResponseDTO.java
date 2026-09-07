@@ -6,5 +6,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public record OrderResponseDTO(UUID id, UUID userId, Status status, LocalDateTime createdAt, List<OrderItemRequestDTO> items) {
+public record OrderResponseDTO(UUID id,
+                               UUID userId,
+                               Status status,
+                               LocalDateTime createdAt,
+                               List<OrderItemRequestDTO> items) {
+
 }

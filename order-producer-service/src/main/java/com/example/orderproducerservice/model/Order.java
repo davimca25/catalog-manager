@@ -19,6 +19,10 @@ import java.util.UUID;
 @Table(name = "tb_orders")
 public class Order {
 
+    public Order(List<OrderItem> items) {
+        this.items = items;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

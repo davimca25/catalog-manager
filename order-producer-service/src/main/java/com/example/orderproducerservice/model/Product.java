@@ -14,6 +14,12 @@ import java.util.UUID;
 @Table(name = "tb_products")
 public class Product {
 
+    public Product(String name, BigDecimal price, Integer quantity) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
