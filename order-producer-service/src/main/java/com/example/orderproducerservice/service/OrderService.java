@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -58,7 +59,14 @@ public class OrderService {
         );
     }
 
-    public void listUserOrders(UUID userId) {
+    public List<Order> listUserOrders(UUID userId) {
+            return orderRepository.findByUserId(userId);
+    }
 
+    public void deleteOrder(UUID id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found."));
+
+        orderRepository.delete(order);
     }
 }
