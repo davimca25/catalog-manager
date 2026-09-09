@@ -1,0 +1,8 @@
+spring.application.name=order-producer-service
+server.port=8081
+spring.datasource.url=jdbc:postgresql://localhost:1234/order
+spring.datasource.username=
+spring.datasource.password=
+
+#secret_key
+api.security.token.secret=

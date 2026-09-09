@@ -1,0 +1,41 @@
+services:
+  postgres-auth:
+    image: postgres:16.14-alpine
+    container_name: postgres_auth_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=auth-service
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata_auth:/var/lib/postgresql/data
+
+  postgres-order:
+    image: postgres:16.14-alpine
+    container_name: postgres_order_auth
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=order-service
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata_order:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: rabbitmq_broker
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+volumes:
+  pgdata_auth:
+  pgdata_order:
+  rabbitmq_data:
