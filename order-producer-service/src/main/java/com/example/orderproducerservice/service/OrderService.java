@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -42,7 +41,7 @@ public class OrderService {
 
         Order savedOrder= orderRepository.save(order);
 
-        List<OrderItemRequestDTO> orderItems = savedOrder.getItems().stream()
+        List<OrderItemRequestDTO> orderItemsDTO = savedOrder.getItems().stream()
                 .map(item -> new OrderItemRequestDTO(
                         item.getProduct().getId(),
                         item.getQuantity()
@@ -55,12 +54,27 @@ public class OrderService {
                 savedOrder.getUserId(),
                 savedOrder.getStatus(),
                 savedOrder.getCreatedAt(),
-                orderItems
+                orderItemsDTO
         );
     }
 
-    public List<Order> listUserOrders(UUID userId) {
-            return orderRepository.findByUserId(userId);
+    public List<OrderResponseDTO> listUserOrders(UUID userId) {
+        List<Order> orders = orderRepository.findByUserId(userId);
+
+        return orders.stream().map(order -> {
+            List<OrderItemRequestDTO> orderItemDTOS = order.getItems().stream().map(item -> new OrderItemRequestDTO(
+                    item.getProduct().getId(),
+                    item.getQuantity()
+            )).toList();
+
+            return new OrderResponseDTO(
+                    order.getId(),
+                    order.getUserId(),
+                    order.getStatus(),
+                    order.getCreatedAt(),
+                    orderItemDTOS
+            );
+        }).toList();
     }
 
     public void deleteOrder(UUID id) {
