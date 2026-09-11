@@ -11,6 +11,8 @@ import com.example.orderproducerservice.repository.OrderRepository;
 import com.example.orderproducerservice.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,6 +25,13 @@ public class OrderService {
 
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
+    private final RabbitTemplate rabbitTemplate;
+
+    @Value("${rabbitmq.exchange.name:order.exchange}")
+    private String exchangeName;
+
+    @Value("${rabbitmq.routing.key:order.routing.key}")
+    private String routingKey;
 
     @Transactional
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO, UUID userID) {
@@ -48,14 +57,17 @@ public class OrderService {
                 ))
                 .toList();
 
-
-        return new OrderResponseDTO(
+        OrderResponseDTO responseDTO = new OrderResponseDTO(
                 savedOrder.getId(),
                 savedOrder.getUserId(),
                 savedOrder.getStatus(),
                 savedOrder.getCreatedAt(),
                 orderItemsDTO
         );
+
+        rabbitTemplate.convertAndSend(exchangeName, routingKey, responseDTO);
+
+        return responseDTO;
     }
 
     public List<OrderResponseDTO> listUserOrders(UUID userId) {
