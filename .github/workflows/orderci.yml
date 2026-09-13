@@ -1,8 +1,10 @@
-name: CI Monorepo Pipeline
+name: Order Service CI
 
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'order-producer-service/**'
   pull_request:
     branches: [ "main" ]
 
@@ -11,21 +13,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do código
+      - name: code checkout
         uses: actions/checkout@v4
 
-      - name: Configurar Java
+      - name: setup java
         uses: actions/setup-java@v4
         with:
           java-version: '25'
           distribution: 'temurin'
           cache: maven
 
-      - name: Build e Testes - Auth Service
-        working-directory: ./auth-service
-        run: mvn clean package
-
-      - name: Build e Testes - Producer Service
+      - name: build and test - Producer Service
         working-directory: ./order-producer-service
         run: mvn clean package
 
