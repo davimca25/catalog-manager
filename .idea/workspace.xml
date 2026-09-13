@@ -11,7 +11,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="103" />
+    <option name="cachedIndexableFilesCount" value="130" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -87,6 +87,7 @@
       <workItem from="1787953820247" duration="17000" />
       <workItem from="1788958482980" duration="1012000" />
       <workItem from="1788962286106" duration="72000" />
+      <workItem from="1789145373602" duration="49000" />
     </task>
     <servers />
   </component>

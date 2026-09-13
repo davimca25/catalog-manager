@@ -34,7 +34,7 @@ public class OrderService {
     private String routingKey;
 
     @Transactional
-    public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO, UUID userID) {
+    public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO, String userName) {
         Order order = new Order();
 
         for (OrderItemRequestDTO request : orderRequestDTO.items()) {
@@ -44,7 +44,7 @@ public class OrderService {
 
             order.addItem(orderItem);
         }
-        order.setUserId(userID);
+        order.setUserName(userName);
         order.setStatus(Status.PENDING);
         order.setCreatedAt(LocalDateTime.now());
 
@@ -59,7 +59,7 @@ public class OrderService {
 
         OrderResponseDTO responseDTO = new OrderResponseDTO(
                 savedOrder.getId(),
-                savedOrder.getUserId(),
+                savedOrder.getUserName(),
                 savedOrder.getStatus(),
                 savedOrder.getCreatedAt(),
                 orderItemsDTO
@@ -70,8 +70,8 @@ public class OrderService {
         return responseDTO;
     }
 
-    public List<OrderResponseDTO> listUserOrders(UUID userId) {
-        List<Order> orders = orderRepository.findByUserId(userId);
+    public List<OrderResponseDTO> listUserOrders(String userName) {
+        List<Order> orders = orderRepository.findByUserName(userName);
 
         return orders.stream().map(order -> {
             List<OrderItemRequestDTO> orderItemDTOS = order.getItems().stream().map(item -> new OrderItemRequestDTO(
@@ -81,7 +81,7 @@ public class OrderService {
 
             return new OrderResponseDTO(
                     order.getId(),
-                    order.getUserId(),
+                    order.getUserName(),
                     order.getStatus(),
                     order.getCreatedAt(),
                     orderItemDTOS

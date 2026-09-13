@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public record OrderEventDTO(
     UUID orderId,
-    UUID userId,
+    String userName,
     Status status,
     LocalDateTime createdAt,
     List<OrderItemEventDTO> items

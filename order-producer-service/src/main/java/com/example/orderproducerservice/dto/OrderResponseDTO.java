@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public record OrderResponseDTO(
         UUID id,
-        UUID userId,
+        String userName,
         Status status,
         LocalDateTime createdAt,
         List<OrderItemRequestDTO> items

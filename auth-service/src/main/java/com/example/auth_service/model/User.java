@@ -26,7 +26,7 @@ public class User implements UserDetails {
     private String username;
     private String password;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "tb_users_roles")
     private List<Role> roles;
 

@@ -59,7 +59,7 @@ class OrderServiceTest {
 
         OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderItemRequestDTOList);
 
-        UUID userId = UUID.randomUUID();
+        String userName = "joao";
         UUID orderItemId = UUID.randomUUID();
         UUID orderId = UUID.randomUUID();
 
@@ -67,19 +67,19 @@ class OrderServiceTest {
         List<OrderItem> orderItemList = new ArrayList<>();
         orderItemList.add(orderItem);
 
-        Order order = new Order(orderId, userId, Status.PENDING, LocalDateTime.now(), orderItemList);
+        Order order = new Order(orderId, userName, Status.PENDING, LocalDateTime.now(), orderItemList);
 
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
         when(orderRepository.save(any(Order.class))).thenReturn(order);
 
         // act
 
-        OrderResponseDTO orderResponseDTO = orderService.createOrder(orderRequestDTO, userId);
+        OrderResponseDTO orderResponseDTO = orderService.createOrder(orderRequestDTO, userName);
 
         // assert
 
         assertNotNull(orderResponseDTO);
-        assertEquals(userId, orderResponseDTO.userId());
+        assertEquals(userName, orderResponseDTO.userName());
         assertEquals(Status.PENDING, orderResponseDTO.status());
 
         verify(orderRepository, times(1)).save(any(Order.class));
@@ -94,7 +94,7 @@ class OrderServiceTest {
 
         UUID productId = UUID.randomUUID();
         UUID orderId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
+        String userName = "joao";
 
         BigDecimal price = new BigDecimal(132.99);
 
@@ -106,19 +106,19 @@ class OrderServiceTest {
         orderItem.setProduct(product);
         orderItemList.add(orderItem);
         OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderItemRequestDTOList);
-        Order order = new Order(orderId, userId, Status.PENDING, LocalDateTime.now(), orderItemList);
+        Order order = new Order(orderId, userName, Status.PENDING, LocalDateTime.now(), orderItemList);
 
         orderItemRequestDTOList.add(orderItemRequestDTO);
 
-        when(orderRepository.findByUserId(userId)).thenReturn(List.of(order));
+        when(orderRepository.findByUserName(userName)).thenReturn(List.of(order));
 
         // act
-        List<OrderResponseDTO> orderResponseDTOList = orderService.listUserOrders(userId);
+        List<OrderResponseDTO> orderResponseDTOList = orderService.listUserOrders(userName);
 
         // assert
 
         assertNotNull(orderResponseDTOList);
-        verify(orderRepository, times(1)).findByUserId(userId);
+        verify(orderRepository, times(1)).findByUserName(userName);
     }
 
     @Test
@@ -126,13 +126,13 @@ class OrderServiceTest {
 
         //arrange
         UUID orderId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
+        String userName = "joao";
 
         OrderItem orderItem = new OrderItem();
         List<OrderItem> orderItemList = new ArrayList<>();
         orderItemList.add(orderItem);
 
-        Order order = new Order(orderId, userId, Status.PENDING, LocalDateTime.now(), orderItemList);
+        Order order = new Order(orderId, userName, Status.PENDING, LocalDateTime.now(), orderItemList);
 
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
 

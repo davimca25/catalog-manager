@@ -23,17 +23,17 @@ public class OrderController {
     public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID userId = UUID.fromString(authentication.getName());
+        String userName = authentication.getName();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(orderRequestDTO, userId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(orderRequestDTO, userName));
     }
 
     @GetMapping
     public ResponseEntity<List<OrderResponseDTO>> listUserOrders() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID userId = UUID.fromString(authentication.getName());
+        String userName = authentication.getName();
 
-        return ResponseEntity.ok().body(orderService.listUserOrders(userId));
+        return ResponseEntity.ok().body(orderService.listUserOrders(userName));
     }
 }

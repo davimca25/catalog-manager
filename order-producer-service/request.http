@@ -1,0 +1,28 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
+
+POST http://localhost:8081/orders
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2FvIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJJZCI6ImIyYTRlZTBlLTIwYjAtNDEyMi05MTVjLTQ4YzFmZDM4ZGVkYyIsImlhdCI6MTc4OTE0NTg5MSwiZXhwIjoxNzg5MTgxODkxfQ.F1ELt4KVHIq3X1Fiar-r55p8wfjm51AsfLUyy7XafgY
+
+{
+  "items": [
+    {
+      "productId": "02114299-bedb-4017-a48d-eb57cbf762a7",
+      "quantity": 1
+    },
+    {
+      "productId": "b21ea3d1-c8c2-4501-bcad-7b2e78557e48",
+      "quantity": 5
+    }
+  ]
+}
+
+###
+
+GET http://localhost:8081/orders
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2FvIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJJZCI6ImIyYTRlZTBlLTIwYjAtNDEyMi05MTVjLTQ4YzFmZDM4ZGVkYyIsImlhdCI6MTc4OTE0NTg5MSwiZXhwIjoxNzg5MTgxODkxfQ.F1ELt4KVHIq3X1Fiar-r55p8wfjm51AsfLUyy7XafgY
