@@ -1,5 +1,7 @@
 package com.example.batchservice.dto;
 
+import com.example.batchservice.model.Status;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

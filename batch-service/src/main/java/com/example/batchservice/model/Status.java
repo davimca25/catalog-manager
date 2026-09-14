@@ -1,4 +1,4 @@
-package com.example.batchservice.dto;
+package com.example.batchservice.model;
 
 public enum Status {
     PENDING,

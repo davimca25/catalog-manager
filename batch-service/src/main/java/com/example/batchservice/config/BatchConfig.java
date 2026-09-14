@@ -1,7 +1,7 @@
 package com.example.batchservice.config;
 
 import com.example.batchservice.dto.OrderEventDTO;
-import com.example.batchservice.dto.Status;
+import com.example.batchservice.model.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -39,8 +38,10 @@ public class BatchConfig {
     private String stockRoutingKey;
 
     @Bean
-    public ItemReader<OrderEventDTO> orderItemReader() {
-        return new ListItemReader<>(Collections.emptyList());
+    public ItemReader<OrderEventDTO> orderItemReader(@Value("${jobParameters['orderId']}") String orderId) {
+        OrderEventDTO orderEvent = fetchOrderData(orderId);
+
+        return new ListItemReader<>(List.of(orderEvent));
     }
 
     @Bean
