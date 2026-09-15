@@ -1,6 +1,7 @@
 package com.example.batchservice.config;
 
 import com.example.batchservice.dto.OrderEventDTO;
+import com.example.batchservice.model.OrderBatchStaging;
 import com.example.batchservice.model.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,14 +15,20 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.batch.infrastructure.item.ItemReader;
 import org.springframework.batch.infrastructure.item.ItemWriter;
-import org.springframework.batch.infrastructure.item.support.ListItemReader;
+import org.springframework.batch.infrastructure.item.data.MongoPagingItemReader;
+import org.springframework.batch.infrastructure.item.data.builder.MongoPagingItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Configuration
@@ -38,24 +45,39 @@ public class BatchConfig {
     private String stockRoutingKey;
 
     @Bean
-    public ItemReader<OrderEventDTO> orderItemReader(@Value("${jobParameters['orderId']}") String orderId) {
-        OrderEventDTO orderEvent = fetchOrderData(orderId);
+    public ItemReader<OrderBatchStaging> orderItemReader(MongoTemplate mongoTemplate) {
 
-        return new ListItemReader<>(List.of(orderEvent));
+        Query query = new Query(Criteria.where("status").is(Status.PENDING));
+
+        return new MongoPagingItemReaderBuilder<OrderBatchStaging>()
+                .name("orderItemReader")
+                .template(mongoTemplate)
+                .collection("order_staging")
+                .targetType(OrderBatchStaging.class)
+                .query(query)
+                .pageSize(10)
+                .sorts(Map.of("createdAt", Sort.Direction.ASC))
+                .build();
     }
 
     @Bean
-    public ItemProcessor<OrderEventDTO, OrderEventDTO> orderItemProcessor() {
-        return event -> {
-            if (event.status() == Status.FAILED) {
+    public ItemProcessor<OrderBatchStaging, OrderEventDTO> orderItemProcessor() {
+        return staging -> {
+            if (staging.getStatus() == Status.FAILED) {
                 return null;
             }
 
-            BigDecimal totalAmount = calculateTotal(event.items());
+            BigDecimal totalAmount = calculateTotal(staging.getItems());
 
-            log.info("Processing order ID: {}. Total amount: R$ {}", event.orderId(), totalAmount);
+            log.info("Processing order ID: {}. Total amount: R$ {}", staging.getOrderId(), totalAmount);
 
-            return event;
+            return new OrderEventDTO(
+                    staging.getOrderId(),
+                    staging.getUserName(),
+                    staging.getStatus(),
+                    staging.getCreatedAt(),
+                    staging.getItems()
+            );
         };
     }
 
@@ -79,11 +101,11 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step processOrderStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public Step processOrderStep(JobRepository jobRepository, PlatformTransactionManager transactionManager, MongoTemplate mongoTemplate) {
         return new StepBuilder("processOrderStep", jobRepository)
-                .<OrderEventDTO, OrderEventDTO>chunk(10)
+                .<OrderBatchStaging, OrderEventDTO>chunk(10)
                 .transactionManager(transactionManager)
-                .reader(orderItemReader())
+                .reader(orderItemReader(mongoTemplate))
                 .processor(orderItemProcessor())
                 .writer(orderItemWriter())
                 .build();

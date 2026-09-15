@@ -1,5 +1,6 @@
 package com.example.batchservice.model;
 
+import com.example.batchservice.dto.OrderEventDTO.OrderItemEventDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.lang.annotation.Documented;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -27,4 +29,6 @@ public class OrderBatchStaging {
     private Status status;
 
     private LocalDateTime createdAt;
+
+    private List<OrderItemEventDTO> items;
 }
