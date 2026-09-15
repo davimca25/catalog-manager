@@ -15,7 +15,6 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.batch.infrastructure.item.ItemReader;
 import org.springframework.batch.infrastructure.item.ItemWriter;
-import org.springframework.batch.infrastructure.item.data.MongoPagingItemReader;
 import org.springframework.batch.infrastructure.item.data.builder.MongoPagingItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,11 +23,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Configuration
@@ -81,24 +83,36 @@ public class BatchConfig {
         };
     }
 
-    @Bean
-    public ItemWriter<OrderEventDTO> orderItemWriter() {
-        return items -> {
-            for (OrderEventDTO event : items) {
-                OrderEventDTO completedEvent = new OrderEventDTO(
-                        event.orderId(),
-                        event.userName(),
-                        Status.COMPLETED,
-                        event.createdAt(),
-                        event.items()
-                );
+        @Bean
+        public ItemWriter<OrderEventDTO> orderItemWriter(MongoTemplate mongoTemplate) {
+            return items -> {
 
-                log.info("Finished batch process for order ID: {}. Sending notification to stock.queue", completedEvent.orderId());
+                List<UUID> completedOrderIds = new ArrayList<>();
 
-                rabbitTemplate.convertAndSend(stockExchangeName, stockRoutingKey, completedEvent);
-            }
-        };
-    }
+                for (OrderEventDTO event : items) {
+                    OrderEventDTO completedEvent = new OrderEventDTO(
+                            event.orderId(),
+                            event.userName(),
+                            Status.COMPLETED,
+                            event.createdAt(),
+                            event.items()
+                    );
+
+                    completedOrderIds.add(completedEvent.orderId());
+
+                    log.info("Finished batch process for order ID: {}. Sending notification to stock.queue", completedEvent.orderId());
+
+                    rabbitTemplate.convertAndSend(stockExchangeName, stockRoutingKey, completedEvent);
+                }
+
+                if (!completedOrderIds.isEmpty()) {
+                    Query query = new Query(Criteria.where("_id").in(completedOrderIds));
+                    Update update = new Update().set("status", Status.COMPLETED);
+
+                    mongoTemplate.updateMulti(query, update, OrderBatchStaging.class);
+                }
+            };
+        }
 
     @Bean
     public Step processOrderStep(JobRepository jobRepository, PlatformTransactionManager transactionManager, MongoTemplate mongoTemplate) {
@@ -107,7 +121,7 @@ public class BatchConfig {
                 .transactionManager(transactionManager)
                 .reader(orderItemReader(mongoTemplate))
                 .processor(orderItemProcessor())
-                .writer(orderItemWriter())
+                .writer(orderItemWriter(mongoTemplate))
                 .build();
     }
 
