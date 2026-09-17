@@ -107,7 +107,7 @@ public class BatchConfig {
 
                 if (!completedOrderIds.isEmpty()) {
                     Query query = new Query(Criteria.where("_id").in(completedOrderIds));
-                    Update update = new Update().set("status", Status.COMPLETED);
+                    Update update = new Update().set("status", Status.PROCESSING);
 
                     mongoTemplate.updateMulti(query, update, OrderBatchStaging.class);
                 }
