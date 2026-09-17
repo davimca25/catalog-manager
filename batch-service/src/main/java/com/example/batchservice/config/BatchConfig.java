@@ -93,7 +93,7 @@ public class BatchConfig {
                     OrderEventDTO completedEvent = new OrderEventDTO(
                             event.orderId(),
                             event.userName(),
-                            Status.COMPLETED,
+                            Status.PROCESSING,
                             event.createdAt(),
                             event.items()
                     );
