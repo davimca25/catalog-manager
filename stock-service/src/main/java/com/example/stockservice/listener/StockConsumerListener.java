@@ -23,11 +23,23 @@ public class StockConsumerListener {
     @Transactional
     public void receiveStockEvent(OrderEventDTO orderEventDTO) {
 
-        log.info("Message received from stack queue: OrderId = {}, UserName = {}", orderEventDTO.orderId(), orderEventDTO.userName());
+        log.info("Message received from stock queue: OrderId = {}, UserName = {}", orderEventDTO.orderId(), orderEventDTO.userName());
 
-        // para cada product em orderEventDTO devemos salvar no db
         for (OrderItemEventDTO orderItemEventDTO : orderEventDTO.items()) {
-            productRepository.findById(orderItemEventDTO.productId());
+
+            productRepository.findById(orderItemEventDTO.productId()).ifPresentOrElse(product -> {
+                int newQuantity = product.getQuantity() - orderItemEventDTO.quantity();
+
+                if (newQuantity >= 0) {
+                    product.setQuantity(newQuantity);
+                    productRepository.save(product);
+
+                } else {
+                    log.warn("Insufficient stock for ProductId = {}. Current Stock = {}, Requested = {}", product.getId(), product.getQuantity(), orderItemEventDTO.quantity());
+
+                }
+
+            }, () -> log.error("ProductId not found: ProductId = {}", orderItemEventDTO.productId()));
         }
 
     }
