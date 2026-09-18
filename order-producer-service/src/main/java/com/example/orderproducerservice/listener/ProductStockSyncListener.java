@@ -22,6 +22,17 @@ public class ProductStockSyncListener {
     public void receiveProductStockSyncEvent(List<ProductStockSyncDTO> products) {
         log.info("Product received from stock, {} items.", products.size());
 
+        for (ProductStockSyncDTO dto : products) {
+            productRepository.findById(dto.productId()).ifPresentOrElse(product -> {
+                product.setQuantity(dto.newQuantity());
+                productRepository.save(product);
 
+                log.info("ProductId = {}, New Quantity = {}",
+                        dto.productId(),
+                        dto.newQuantity()
+                );
+
+            }, () -> log.error("ProductId = {} not found", dto.productId()));
+        }
     }
 }
