@@ -2,15 +2,17 @@ package com.example.stockservice.listener;
 
 import com.example.stockservice.dto.OrderEventDTO;
 import com.example.stockservice.dto.OrderEventDTO.OrderItemEventDTO;
+import com.example.stockservice.model.Status;
 import com.example.stockservice.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,6 +37,8 @@ public class StockConsumerListener {
                 orderEventDTO.userName()
         );
 
+        AtomicBoolean hasStockError = new AtomicBoolean(false);
+
         for (OrderItemEventDTO orderItemEventDTO : orderEventDTO.items()) {
 
             productRepository.findById(orderItemEventDTO.productId()).ifPresentOrElse(product -> {
@@ -43,6 +47,7 @@ public class StockConsumerListener {
                 if (newQuantity >= 0) {
                     product.setQuantity(newQuantity);
                     productRepository.save(product);
+                    log.info("Stock updated for ProductId = {}", product.getId());
 
                 } else {
                     log.warn("Insufficient stock for ProductId = {}. Current Stock = {}, Requested = {}",
@@ -50,11 +55,30 @@ public class StockConsumerListener {
                             product.getQuantity(),
                             orderItemEventDTO.quantity()
                     );
-
+                    hasStockError.set(true);
                 }
 
-            }, () -> log.error("ProductId not found: ProductId = {}", orderItemEventDTO.productId()));
+            }, () -> {
+                log.error("ProductId not found: ProductId = {}", orderItemEventDTO.productId());
+                hasStockError.set(true);
+            });
         }
+
+        Status finalStatus = hasStockError.get() ? Status.FAILED : Status.COMPLETED;
+
+        OrderEventDTO responseEvent = new OrderEventDTO(
+                orderEventDTO.orderId(),
+                orderEventDTO.userName(),
+                finalStatus,
+                orderEventDTO.createdAt(),
+                orderEventDTO.items()
+        );
+
+        rabbitTemplate.convertAndSend(
+                orderResponseExchange,
+                orderResponseRoutingKey,
+                responseEvent
+        );
 
     }
 }
