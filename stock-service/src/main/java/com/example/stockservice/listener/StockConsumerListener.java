@@ -6,7 +6,10 @@ import com.example.stockservice.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -15,6 +18,13 @@ import org.springframework.stereotype.Component;
 public class StockConsumerListener {
 
     private final ProductRepository productRepository;
+    private final RabbitTemplate rabbitTemplate;
+
+    @Value("${rabbitmq.exchange.order.response.name:order.response.exchange}")
+    private String orderResponseExchange;
+
+    @Value("${rabbitmq.routing.order.response.key:order.response.routing.key}")
+    private String orderResponseRoutingKey;
 
     @RabbitListener(queues = "${rabbitmq.queue.stock.name:stock.queue}")
     @Transactional
