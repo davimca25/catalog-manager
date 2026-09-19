@@ -23,15 +23,6 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.routing.stock.key:stock.routing.key}")
     private String stockRoutingKey;
 
-    @Value("${rabbitmq.queue.order.response.name:order.response.queue}")
-    private String orderResponseQueueName;
-
-    @Value("${rabbitmq.exchange.order.response.name:order.response.exchange}")
-    private String orderResponseExchangeName;
-
-    @Value("${rabbitmq.routing.order.response.key:order.response.routing.key}")
-    private String orderResponseRoutingKey;
-
     @Bean
     public Queue stockQueue() {
         return new Queue(stockQueueName, true);
@@ -51,28 +42,6 @@ public class RabbitMQConfig {
                 .bind(stockQueue)
                 .to(stockExchange)
                 .with(stockRoutingKey);
-    }
-
-    @Bean
-    public Queue orderResponseQueue() {
-        return new Queue(orderResponseQueueName, true);
-    }
-
-    @Bean
-    public TopicExchange orderResponseExchange() {
-        return new TopicExchange(orderResponseExchangeName);
-    }
-
-    @Bean
-    public Binding orderResponseBinding(
-            Queue orderResponseQueue,
-            TopicExchange orderResponseExchange
-    ) {
-        return BindingBuilder
-                .bind(orderResponseQueue)
-                .to(orderResponseExchange)
-                .with(orderResponseRoutingKey);
-
     }
 
     @Bean

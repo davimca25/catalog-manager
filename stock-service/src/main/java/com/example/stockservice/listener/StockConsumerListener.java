@@ -78,7 +78,11 @@ public class StockConsumerListener {
             });
         }
         if (!hasStockError.get()) {
-            rabbitTemplate.convertAndSend(productStockExchange, productStockRoutingKey, productsStock);
+            rabbitTemplate.convertAndSend(
+                    productStockExchange,
+                    productStockRoutingKey,
+                    productsStock
+            );
         }
 
         Status finalStatus = hasStockError.get() ? Status.FAILED : Status.COMPLETED;
