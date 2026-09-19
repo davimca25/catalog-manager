@@ -12,17 +12,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${rabbitmq.queue.order.name}")
+    @Value("${rabbitmq.queue.order.name:order.queue}")
     private String orderQueueName;
 
-    @Value("${rabbitmq.exchange.stock.name}")
-    private String stockExchangeName;
+    @Value("${rabbitmq.exchange.order.name:order.exchange}")
+    private String orderExchangeName;
 
-    @Value("${rabbitmq.queue.stock.name}")
-    private String stockQueueName;
-
-    @Value("${rabbitmq.routing.stock.key}")
-    private String stockRoutingKey;
+    @Value("${rabbitmq.routing.order.key:order.routing.key}")
+    private String orderRoutingKey;
 
     @Bean
     public Queue orderQueue() {
@@ -30,21 +27,16 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue stockQueue() {
-        return new Queue(stockQueueName, true);
+    public TopicExchange orderExchange() {
+        return new TopicExchange(orderExchangeName);
     }
 
     @Bean
-    public TopicExchange stockExchange() {
-        return new TopicExchange(stockExchangeName);
-    }
-
-    @Bean
-    public Binding stockBinding(Queue stockQueue, TopicExchange stockExchange) {
+    public Binding orderBinding(Queue orderQueue, TopicExchange orderExchange) {
         return BindingBuilder
-                .bind(stockQueue)
-                .to(stockExchange)
-                .with(stockRoutingKey);
+                .bind(orderQueue)
+                .to(orderExchange)
+                .with(orderRoutingKey);
     }
 
     @Bean
