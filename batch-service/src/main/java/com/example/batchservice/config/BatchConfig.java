@@ -40,10 +40,10 @@ public class BatchConfig {
 
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("${rabbitmq.exchange.stock.name}")
+    @Value("${rabbitmq.exchange.stock.name:stock.exchange}")
     private String stockExchangeName;
 
-    @Value("${rabbitmq.routing.stock.key}")
+    @Value("${rabbitmq.routing.stock.key:stock.routing.key}")
     private String stockRoutingKey;
 
     @Bean
