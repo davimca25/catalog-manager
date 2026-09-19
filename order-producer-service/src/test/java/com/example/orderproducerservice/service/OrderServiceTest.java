@@ -51,7 +51,7 @@ class OrderServiceTest {
 
         UUID productId = UUID.randomUUID();
         BigDecimal price = new BigDecimal(132.99);
-        Product product = new Product(productId, "Livro", price, 12);
+        Product product = new Product(productId, "Livro", price, 12, true);
         OrderItemRequestDTO orderItemRequestDTO = new OrderItemRequestDTO(productId, 5);
 
         List<OrderItemRequestDTO> orderItemRequestDTOList = new ArrayList<>();
@@ -98,7 +98,7 @@ class OrderServiceTest {
 
         BigDecimal price = new BigDecimal(132.99);
 
-        Product product = new Product(productId, "Livro", price, 12);
+        Product product = new Product(productId, "Livro", price, 12, true);
         OrderItemRequestDTO orderItemRequestDTO = new OrderItemRequestDTO(productId, 5);
         List<OrderItemRequestDTO> orderItemRequestDTOList = new ArrayList<>();
         List<OrderItem> orderItemList = new ArrayList<>();
