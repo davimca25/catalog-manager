@@ -9,5 +9,6 @@ public record ProductEventDTO(
         String name,
         BigDecimal price,
         Integer quantity,
+        boolean active,
         Action action
 ) implements Serializable {}

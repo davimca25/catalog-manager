@@ -27,7 +27,8 @@ public class ProductCreatedListener {
                             productDTO.id(),
                             productDTO.name(),
                             productDTO.price(),
-                            productDTO.quantity()
+                            productDTO.quantity(),
+                            true
                     );
                     productRepository.save(product1);
 
@@ -53,6 +54,14 @@ public class ProductCreatedListener {
                 break;
 
             case DELETE:
+
+                productRepository.findById(productDTO.id()).ifPresentOrElse(product -> {
+                    product.setActive(false);
+                    productRepository.save(product);
+
+                }, () -> log.error("ProductId = {} not found", productDTO.id()));
+
+                break;
 
 
         }
