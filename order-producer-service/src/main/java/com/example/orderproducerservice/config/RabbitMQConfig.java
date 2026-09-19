@@ -12,31 +12,66 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${rabbitmq.exchange.name}")
-    private String exchangeName;
+    // order response
 
-    @Value("${rabbitmq.queue.name}")
-    private String queueName;
+    @Value("${rabbitmq.queue.order.response.name:order.response.queue}")
+    private String orderResponseQueueName;
 
-    @Value("${rabbitmq.routing.key}")
-    private String routingKey;
+    @Value("${rabbitmq.exchange.order.response.name:order.response.exchange}")
+    private String orderResponseExchangeName;
+
+    @Value("${rabbitmq.routing.order.response.key:order.response.routing.key}")
+    private String orderResponseRoutingKey;
+
+    // product stock sync
+
+    @Value("${rabbitmq.queue.product.stock.name:product.stock.queue}")
+    private String productStockQueueName;
+
+    @Value("${rabbitmq.exchange.product.stock.name:product.stock.exchange}")
+    private String productStockExchangeName;
+
+    @Value("${rabbitmq.routing.product.stock.key:product.stock.routing.key}")
+    private String productStockRoutingKey;
+
+    // beans for order response listener
 
     @Bean
-    public Queue orderQueue() {
-        return new Queue(queueName, true);
+    public Queue orderResponseQueue() {
+        return new Queue(orderResponseQueueName, true);
     }
 
     @Bean
-    public TopicExchange orderExchange() {
-        return new TopicExchange(exchangeName);
+    public TopicExchange orderResponseExchange() {
+        return new TopicExchange(orderResponseExchangeName);
     }
 
     @Bean
-    public Binding binding(Queue orderQueue, TopicExchange orderExchange) {
+    public Binding orderResponseBinding(Queue orderResponseQueue, TopicExchange orderResponseExchange) {
         return BindingBuilder
-                .bind(orderQueue)
-                .to(orderExchange)
-                .with(routingKey);
+                .bind(orderResponseQueue)
+                .to(orderResponseExchange)
+                .with(orderResponseRoutingKey);
+    }
+
+    // beans for product stock listener
+
+    @Bean
+    public Queue productStockQueue() {
+        return new Queue(productStockQueueName, true);
+    }
+
+    @Bean
+    public TopicExchange productStockExchange() {
+        return new TopicExchange(productStockExchangeName);
+    }
+
+    @Bean
+    public Binding productStockBinding(Queue productStockQueue, TopicExchange productStockExchange) {
+        return BindingBuilder
+                .bind(productStockQueue)
+                .to(productStockExchange)
+                .with(productStockRoutingKey);
     }
 
     @Bean
