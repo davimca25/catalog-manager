@@ -43,6 +43,7 @@ public class ProductService {
                 productSaved.getName(),
                 productSaved.getPrice(),
                 productSaved.getQuantity(),
+                true,
                 Action.CREATE
         ));
 
@@ -78,6 +79,7 @@ public class ProductService {
                 productSaved.getName(),
                 productSaved.getPrice(),
                 productSaved.getQuantity(),
+                true,
                 Action.UPDATE
         ));
 
@@ -98,7 +100,9 @@ public class ProductService {
                 product.getName(),
                 product.getPrice(),
                 product.getQuantity(),
-                Action.DELETE)
+                false,
+                Action.DELETE
+                )
         );
     }
 }
