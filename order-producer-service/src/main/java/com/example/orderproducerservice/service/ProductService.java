@@ -93,7 +93,9 @@ public class ProductService {
     @Transactional
     public void deleteProduct(UUID id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found."));
-        productRepository.delete(product);
+
+        product.setActive(false);
+        productRepository.save(product);
 
         rabbitTemplate.convertAndSend(productExchange, productRoutingKey, new ProductEventDTO(
                 product.getId(),

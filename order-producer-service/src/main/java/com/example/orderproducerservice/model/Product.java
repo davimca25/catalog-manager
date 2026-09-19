@@ -30,4 +30,6 @@ public class Product {
 
     private Integer quantity;
 
+    private boolean active = true;
+
 }

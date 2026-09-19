@@ -38,7 +38,12 @@ public class OrderService {
         Order order = new Order();
 
         for (OrderItemRequestDTO request : orderRequestDTO.items()) {
-            Product product = productRepository.findById(request.productId()).orElseThrow(() -> new RuntimeException("Product not found."));
+            Product product = productRepository.findById(request.productId())
+                    .orElseThrow(() -> new RuntimeException("Product not found."));
+
+            if (!product.isActive()) {
+                throw new RuntimeException("Product: " + product.getName() + " not available.");
+            }
 
             OrderItem orderItem = new OrderItem(product, request.quantity());
 
