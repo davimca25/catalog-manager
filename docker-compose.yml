@@ -13,7 +13,7 @@ services:
 
   postgres-order:
     image: postgres:16.14-alpine
-    container_name: postgres_order_auth
+    container_name: postgres_order_db
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=12345
@@ -22,6 +22,38 @@ services:
       - "5434:5432"
     volumes:
       - pgdata_order:/var/lib/postgresql/data
+
+  postgres-batch:
+    image: postgres:16.14-alpine
+    container_name: postgres_batch_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=batch-service
+    ports:
+      - "5435:5432"
+    volumes:
+      - pgdata_batch:/var/lib/postgresql/data
+
+  mongo-batch:
+    image: mongo:7.0
+    container_name: mongo_batch_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata_batch:/data/db
+
+  postgres-stock:
+    image: postgres:16.14-alpine
+    container_name: postgres_stock_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=stock-service
+    ports:
+      - "5436:5432"
+    volumes:
+      - pgdata_stock:/var/lib/postgresql/data
 
   rabbitmq:
     image: rabbitmq:3.13-management-alpine
@@ -38,4 +70,7 @@ services:
 volumes:
   pgdata_auth:
   pgdata_order:
+  pgdata_batch:
+  mongodata_batch:
+  pgdata_stock:
   rabbitmq_data:
