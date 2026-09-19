@@ -1,4 +1,13 @@
 package com.example.orderproducerservice.dto;
 
-public record ProductEventDTO() {
-}
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.UUID;
+
+public record ProductEventDTO(
+        UUID Id,
+        String name,
+        BigDecimal price,
+        Integer quantity,
+        Action action
+) implements Serializable {}

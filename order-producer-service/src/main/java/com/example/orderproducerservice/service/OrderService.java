@@ -27,10 +27,10 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("${rabbitmq.exchange.name:order.exchange}")
+    @Value("${rabbitmq.exchange.order.name:order.exchange}")
     private String exchangeName;
 
-    @Value("${rabbitmq.routing.key:order.routing.key}")
+    @Value("${rabbitmq.routing.order.key:order.routing.key}")
     private String routingKey;
 
     @Transactional
