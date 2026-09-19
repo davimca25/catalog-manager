@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+    // batch-service
+
     @Value("${rabbitmq.queue.stock.name:stock.queue}")
     private String stockQueueName;
 
@@ -22,6 +24,17 @@ public class RabbitMQConfig {
 
     @Value("${rabbitmq.routing.stock.key:stock.routing.key}")
     private String stockRoutingKey;
+
+    // product event from order-service
+
+    @Value("${rabbitmq.queue.product.name:product.queue}")
+    private String productQueueName;
+
+    @Value("${rabbitmq.exchange.product.name:product.exchange}")
+    private String productExchangeName;
+
+    @Value("${rabbitmq.routing.product.key:product.routing.key}")
+    private String productRoutingKey;
 
     @Bean
     public Queue stockQueue() {
@@ -42,6 +55,27 @@ public class RabbitMQConfig {
                 .bind(stockQueue)
                 .to(stockExchange)
                 .with(stockRoutingKey);
+    }
+
+    @Bean
+    public Queue productQueue() {
+        return new Queue(productQueueName, true);
+    }
+
+    @Bean
+    public TopicExchange productExchange() {
+        return new TopicExchange(productExchangeName);
+    }
+
+    @Bean
+    public Binding productBinding(
+            Queue productQueue,
+            TopicExchange productExchange
+    ) {
+        return BindingBuilder
+                .bind(productQueue)
+                .to(productExchange)
+                .with(productRoutingKey);
     }
 
     @Bean

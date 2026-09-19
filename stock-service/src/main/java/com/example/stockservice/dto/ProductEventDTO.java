@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record ProductEventDTO(
-        UUID Id,
+        UUID id,
         String name,
         BigDecimal price,
         Integer quantity,
