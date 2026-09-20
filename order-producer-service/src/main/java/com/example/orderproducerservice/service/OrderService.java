@@ -73,7 +73,7 @@ public class OrderService {
 
         List<OrderEventDTO.OrderItemEventDTO> orderItemsEventDTO = savedOrder.getItems().stream()
                 .map(item -> new OrderEventDTO.OrderItemEventDTO(
-                        item.getId(),
+                        item.getProduct().getId(),
                         item.getQuantity(),
                         item.getPrice()
                 ))

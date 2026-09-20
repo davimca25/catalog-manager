@@ -29,6 +29,7 @@ public class Order {
 
     private String userName;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     private LocalDateTime createdAt;
