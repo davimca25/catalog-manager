@@ -1,5 +1,6 @@
 package com.example.orderproducerservice.service;
 
+import com.example.orderproducerservice.dto.OrderEventDTO;
 import com.example.orderproducerservice.dto.OrderItemRequestDTO;
 import com.example.orderproducerservice.dto.OrderRequestDTO;
 import com.example.orderproducerservice.dto.OrderResponseDTO;
@@ -70,7 +71,23 @@ public class OrderService {
                 orderItemsDTO
         );
 
-        rabbitTemplate.convertAndSend(exchangeName, routingKey, responseDTO);
+        List<OrderEventDTO.OrderItemEventDTO> orderItemsEventDTO = savedOrder.getItems().stream()
+                .map(item -> new OrderEventDTO.OrderItemEventDTO(
+                        item.getId(),
+                        item.getQuantity(),
+                        item.getPrice()
+                ))
+                .toList();
+
+        OrderEventDTO orderEventDTO = new OrderEventDTO(
+                savedOrder.getId(),
+                savedOrder.getUserName(),
+                savedOrder.getStatus(),
+                savedOrder.getCreatedAt(),
+                orderItemsEventDTO
+        );
+
+        rabbitTemplate.convertAndSend(exchangeName, routingKey, orderEventDTO);
 
         return responseDTO;
     }
