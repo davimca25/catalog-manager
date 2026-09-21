@@ -1,6 +1,5 @@
 package com.example.stockservice.listener;
 
-import com.example.stockservice.dto.Action;
 import com.example.stockservice.dto.ProductEventDTO;
 import com.example.stockservice.model.Product;
 import com.example.stockservice.repository.ProductRepository;
@@ -17,7 +16,7 @@ public class ProductCreatedListener {
 
     private final ProductRepository productRepository;
 
-    @RabbitListener(queues = "${rabbitmq.queue.product.name:product.queue}")
+    @RabbitListener(queues = "${rabbitmq.queue.product.created.name:product.created.queue}")
     @Transactional
     public void receiveNewProduct(ProductEventDTO productDTO) {
         switch (productDTO.action()) {
@@ -49,7 +48,7 @@ public class ProductCreatedListener {
                     product.setQuantity(productDTO.quantity());
                     productRepository.save(product);
 
-                }, () -> log.error("ProductId = {} not found", productDTO.id()));
+                }, () -> log.error("ProductId = {} not found, cannot update.", productDTO.id()));
 
                 break;
 
@@ -59,7 +58,7 @@ public class ProductCreatedListener {
                     product.setActive(false);
                     productRepository.save(product);
 
-                }, () -> log.error("ProductId = {} not found", productDTO.id()));
+                }, () -> log.error("ProductId = {} not found, cannot delete.", productDTO.id()));
 
                 break;
 
