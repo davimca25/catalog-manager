@@ -1,10 +1,8 @@
 package com.example.orderproducerservice.listener;
 
 import com.example.orderproducerservice.dto.OrderEventDTO;
-import com.example.orderproducerservice.dto.OrderEventDTO.OrderItemEventDTO;
 import com.example.orderproducerservice.model.Status;
 import com.example.orderproducerservice.repository.OrderRepository;
-import com.example.orderproducerservice.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +26,15 @@ public class OrderResponseListener {
         );
 
         orderRepository.findById(orderEventDTO.orderId()).ifPresentOrElse(order -> {
+
+            if (order.getStatus() == Status.COMPLETED || order.getStatus() == Status.FAILED) {
+
+                log.warn("Order {} already finished, ({}). Ignoring duplicate event",
+                        order.getId(),
+                        order.getStatus()
+                );
+                return;
+            }
 
             order.setStatus(orderEventDTO.status());
             orderRepository.save(order);
