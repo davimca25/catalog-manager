@@ -22,11 +22,11 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("${rabbitmq.exchange.product.name:product.exchange}")
-    private String productExchange;
+    @Value("${rabbitmq.exchange.product.created.name:product.created.exchange}")
+    private String productCreatedExchange;
 
-    @Value("${rabbitmq.routing.product.key:product.routing.key}")
-    private String productRoutingKey;
+    @Value("${rabbitmq.routing.product.created.key:product.created.routing.key}")
+    private String productCreatedRoutingKey;
 
     @Transactional
     public ProductResponseDTO createProduct(ProductRequestDTO productRequestDTO) {
@@ -38,7 +38,7 @@ public class ProductService {
 
         Product productSaved = productRepository.save(product);
 
-        rabbitTemplate.convertAndSend(productExchange, productRoutingKey, new ProductEventDTO(
+        rabbitTemplate.convertAndSend(productCreatedExchange, productCreatedRoutingKey, new ProductEventDTO(
                 productSaved.getId(),
                 productSaved.getName(),
                 productSaved.getPrice(),
@@ -74,7 +74,7 @@ public class ProductService {
 
         Product productSaved = productRepository.save(product);
 
-        rabbitTemplate.convertAndSend(productExchange, productRoutingKey, new ProductEventDTO(
+        rabbitTemplate.convertAndSend(productCreatedExchange, productCreatedRoutingKey, new ProductEventDTO(
                 productSaved.getId(),
                 productSaved.getName(),
                 productSaved.getPrice(),
@@ -97,7 +97,7 @@ public class ProductService {
         product.setActive(false);
         productRepository.save(product);
 
-        rabbitTemplate.convertAndSend(productExchange, productRoutingKey, new ProductEventDTO(
+        rabbitTemplate.convertAndSend(productCreatedExchange, productCreatedRoutingKey, new ProductEventDTO(
                 product.getId(),
                 product.getName(),
                 product.getPrice(),

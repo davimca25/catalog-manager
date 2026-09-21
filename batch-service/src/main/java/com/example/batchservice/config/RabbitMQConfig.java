@@ -12,31 +12,31 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${rabbitmq.queue.order.name:order.queue}")
-    private String orderQueueName;
+    @Value("${rabbitmq.queue.order.created.name:order.created.queue}")
+    private String orderCreatedQueueName;
 
-    @Value("${rabbitmq.exchange.order.name:order.exchange}")
-    private String orderExchangeName;
+    @Value("${rabbitmq.exchange.order.created.name:order.created.exchange}")
+    private String orderCreatedExchangeName;
 
-    @Value("${rabbitmq.routing.order.key:order.routing.key}")
-    private String orderRoutingKey;
+    @Value("${rabbitmq.routing.order.created.key:order.created.routing.key}")
+    private String orderCreatedRoutingKey;
 
     @Bean
-    public Queue orderQueue() {
-        return new Queue(orderQueueName, true);
+    public Queue orderCreatedQueue() {
+        return new Queue(orderCreatedQueueName, true);
     }
 
     @Bean
-    public TopicExchange orderExchange() {
-        return new TopicExchange(orderExchangeName);
+    public TopicExchange orderCreatedExchange() {
+        return new TopicExchange(orderCreatedExchangeName);
     }
 
     @Bean
-    public Binding orderBinding(Queue orderQueue, TopicExchange orderExchange) {
+    public Binding orderCreatedBinding(Queue orderCreatedQueue, TopicExchange orderCreatedExchange) {
         return BindingBuilder
-                .bind(orderQueue)
-                .to(orderExchange)
-                .with(orderRoutingKey);
+                .bind(orderCreatedQueue)
+                .to(orderCreatedExchange)
+                .with(orderCreatedRoutingKey);
     }
 
     @Bean

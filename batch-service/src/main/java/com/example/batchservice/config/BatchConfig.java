@@ -40,11 +40,11 @@ public class BatchConfig {
 
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("${rabbitmq.exchange.stock.name:stock.exchange}")
-    private String stockExchangeName;
+    @Value("${rabbitmq.exchange.stock.decrement.name:stock.decrement.exchange}")
+    private String stockDecrementExchangeName;
 
-    @Value("${rabbitmq.routing.stock.key:stock.routing.key}")
-    private String stockRoutingKey;
+    @Value("${rabbitmq.routing.stock.decrement.key:stock.decrement.routing.key}")
+    private String stockDecrementRoutingKey;
 
     @Bean
     public ItemReader<OrderBatchStaging> orderItemReader(MongoTemplate mongoTemplate) {
@@ -102,7 +102,7 @@ public class BatchConfig {
 
                     log.info("Finished batch process for order ID: {}. Sending notification to stock.queue", completedEvent.orderId());
 
-                    rabbitTemplate.convertAndSend(stockExchangeName, stockRoutingKey, completedEvent);
+                    rabbitTemplate.convertAndSend(stockDecrementExchangeName, stockDecrementRoutingKey, completedEvent);
                 }
 
                 if (!completedOrderIds.isEmpty()) {

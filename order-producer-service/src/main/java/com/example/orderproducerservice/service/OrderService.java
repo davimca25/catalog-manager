@@ -28,11 +28,11 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("${rabbitmq.exchange.order.name:order.exchange}")
-    private String exchangeName;
+    @Value("${rabbitmq.exchange.order.created.name:order.created.exchange}")
+    private String OrderCreatedExchangeName;
 
-    @Value("${rabbitmq.routing.order.key:order.routing.key}")
-    private String routingKey;
+    @Value("${rabbitmq.routing.order.created.key:order.created.routing.key}")
+    private String OrderCreatedRoutingKey;
 
     @Transactional
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO, String userName) {
@@ -87,7 +87,7 @@ public class OrderService {
                 orderItemsEventDTO
         );
 
-        rabbitTemplate.convertAndSend(exchangeName, routingKey, orderEventDTO);
+        rabbitTemplate.convertAndSend(OrderCreatedExchangeName, OrderCreatedRoutingKey, orderEventDTO);
 
         return responseDTO;
     }

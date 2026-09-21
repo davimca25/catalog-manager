@@ -16,66 +16,66 @@ public class RabbitMQConfig {
 
     // batch-service
 
-    @Value("${rabbitmq.queue.stock.name:stock.queue}")
-    private String stockQueueName;
+    @Value("${rabbitmq.queue.stock.decrement.name:stock.decrement.queue}")
+    private String stockDecrementQueueName;
 
-    @Value("${rabbitmq.exchange.stock.name:stock.exchange}")
-    private String stockExchangeName;
+    @Value("${rabbitmq.exchange.stock.decrement.name:stock.decrement.exchange}")
+    private String stockDecrementExchangeName;
 
-    @Value("${rabbitmq.routing.stock.key:stock.routing.key}")
-    private String stockRoutingKey;
+    @Value("${rabbitmq.routing.stock.decrement.key:stock.decrement.routing.key}")
+    private String stockDecrementRoutingKey;
 
     // product event from order-service
 
-    @Value("${rabbitmq.queue.product.name:product.queue}")
-    private String productQueueName;
+    @Value("${rabbitmq.queue.product.created.name:product.created.queue}")
+    private String productCreatedQueueName;
 
-    @Value("${rabbitmq.exchange.product.name:product.exchange}")
-    private String productExchangeName;
+    @Value("${rabbitmq.exchange.product.created.name:product.created.exchange}")
+    private String productCreatedExchangeName;
 
-    @Value("${rabbitmq.routing.product.key:product.routing.key}")
-    private String productRoutingKey;
+    @Value("${rabbitmq.routing.product.created.key:product.created.routing.key}")
+    private String productCreatedRoutingKey;
 
     @Bean
-    public Queue stockQueue() {
-        return new Queue(stockQueueName, true);
+    public Queue stockDecrementQueue() {
+        return new Queue(stockDecrementQueueName, true);
     }
 
     @Bean
-    public TopicExchange stockExchange() {
-        return new TopicExchange(stockExchangeName);
+    public TopicExchange stockDecrementExchange() {
+        return new TopicExchange(stockDecrementExchangeName);
     }
 
     @Bean
-    public Binding stockBinding(
-            Queue stockQueue,
-            TopicExchange stockExchange
+    public Binding stockDecrementBinding(
+            Queue stockDecrementQueue,
+            TopicExchange stockDecrementExchange
     ) {
         return BindingBuilder
-                .bind(stockQueue)
-                .to(stockExchange)
-                .with(stockRoutingKey);
+                .bind(stockDecrementQueue)
+                .to(stockDecrementExchange)
+                .with(stockDecrementRoutingKey);
     }
 
     @Bean
-    public Queue productQueue() {
-        return new Queue(productQueueName, true);
+    public Queue productCreatedQueue() {
+        return new Queue(productCreatedQueueName, true);
     }
 
     @Bean
-    public TopicExchange productExchange() {
-        return new TopicExchange(productExchangeName);
+    public TopicExchange productCreatedExchange() {
+        return new TopicExchange(productCreatedExchangeName);
     }
 
     @Bean
-    public Binding productBinding(
-            Queue productQueue,
-            TopicExchange productExchange
+    public Binding productCreatedBinding(
+            Queue productCreatedQueue,
+            TopicExchange productCreatedExchange
     ) {
         return BindingBuilder
-                .bind(productQueue)
-                .to(productExchange)
-                .with(productRoutingKey);
+                .bind(productCreatedQueue)
+                .to(productCreatedExchange)
+                .with(productCreatedRoutingKey);
     }
 
     @Bean

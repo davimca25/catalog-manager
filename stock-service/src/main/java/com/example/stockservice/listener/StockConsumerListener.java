@@ -37,7 +37,7 @@ public class StockConsumerListener {
     @Value("${rabbitmq.routing.product.stock.key:product.stock.routing.key}")
     private String productStockRoutingKey;
 
-    @RabbitListener(queues = "${rabbitmq.queue.stock.name:stock.queue}")
+    @RabbitListener(queues = "${rabbitmq.queue.stock.decrement.name:stock.decrement.queue}")
     @Transactional
     public void receiveStockEvent(OrderEventDTO orderEventDTO) {
 

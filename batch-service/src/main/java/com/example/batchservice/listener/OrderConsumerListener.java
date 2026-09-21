@@ -23,7 +23,7 @@ public class OrderConsumerListener {
     private final Job processOrderJob;
     private final MongoTemplate mongoTemplate;
 
-    @RabbitListener(queues = "${rabbitmq.queue.order.name}")
+    @RabbitListener(queues = "${rabbitmq.queue.order.created.name:order.created.queue}")
     public void receiveOrderEvent(OrderEventDTO orderEventDTO) {
         log.info("Message received from order.queue: Order ID = {}, UserName = {}", orderEventDTO.orderId(), orderEventDTO.userName());
 
