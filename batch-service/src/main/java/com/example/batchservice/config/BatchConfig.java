@@ -87,7 +87,7 @@ public class BatchConfig {
         public ItemWriter<OrderEventDTO> orderItemWriter(MongoTemplate mongoTemplate) {
             return items -> {
 
-                List<UUID> completedOrderIds = new ArrayList<>();
+                List<String> completedOrderIds = new ArrayList<>();
 
                 for (OrderEventDTO event : items) {
                     OrderEventDTO completedEvent = new OrderEventDTO(
@@ -98,7 +98,7 @@ public class BatchConfig {
                             event.items()
                     );
 
-                    completedOrderIds.add(completedEvent.orderId());
+                    completedOrderIds.add(completedEvent.orderId().toString());
 
                     log.info("Finished batch process for order ID: {}. Sending notification to stock.queue", completedEvent.orderId());
 
