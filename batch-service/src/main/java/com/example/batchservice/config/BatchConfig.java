@@ -87,7 +87,7 @@ public class BatchConfig {
         public ItemWriter<OrderEventDTO> orderItemWriter(MongoTemplate mongoTemplate) {
             return items -> {
 
-                List<String> completedOrderIds = new ArrayList<>();
+                List<UUID> completedOrderIds = new ArrayList<>();
 
                 for (OrderEventDTO event : items) {
                     OrderEventDTO completedEvent = new OrderEventDTO(
@@ -98,7 +98,7 @@ public class BatchConfig {
                             event.items()
                     );
 
-                    completedOrderIds.add(completedEvent.orderId().toString());
+                    completedOrderIds.add(completedEvent.orderId());
 
                     log.info("Finished batch process for order ID: {}. Sending notification to stock.queue", completedEvent.orderId());
 
@@ -106,7 +106,7 @@ public class BatchConfig {
                 }
 
                 if (!completedOrderIds.isEmpty()) {
-                    Query query = new Query(Criteria.where("_id").in(completedOrderIds));
+                    Query query = new Query(Criteria.where("orderId").in(completedOrderIds));
                     Update update = new Update().set("status", Status.PROCESSING);
 
                     mongoTemplate.updateMulti(query, update, OrderBatchStaging.class);
