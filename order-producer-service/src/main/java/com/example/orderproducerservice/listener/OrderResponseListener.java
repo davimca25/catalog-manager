@@ -1,6 +1,7 @@
 package com.example.orderproducerservice.listener;
 
 import com.example.orderproducerservice.dto.OrderEventDTO;
+import com.example.orderproducerservice.model.Order;
 import com.example.orderproducerservice.model.Status;
 import com.example.orderproducerservice.repository.OrderRepository;
 import jakarta.transaction.Transactional;
@@ -25,26 +26,22 @@ public class OrderResponseListener {
                 orderEventDTO.status()
         );
 
-        orderRepository.findById(orderEventDTO.orderId()).ifPresentOrElse(order -> {
+        Order order = orderRepository.findById(orderEventDTO.orderId()).orElseThrow(() -> new RuntimeException("Order not found yet (Race Condition). Retrying... OrderId: "+ orderEventDTO.orderId()));
 
-            if (order.getStatus() == Status.COMPLETED || order.getStatus() == Status.FAILED) {
-
-                log.warn("Order {} already finished, ({}). Ignoring duplicate event",
-                        order.getId(),
-                        order.getStatus()
-                );
-                return;
-            }
-
-            order.setStatus(orderEventDTO.status());
-            orderRepository.save(order);
-
-            log.info("Order status updated successfully in DB: OrderId = {}, New Status = {}",
+        if (order.getStatus() == Status.COMPLETED || order.getStatus() == Status.FAILED) {
+            log.warn("Order {} already finished, ({}). Ignoring duplicate event",
                     order.getId(),
                     order.getStatus()
             );
+            return;
+        }
 
-        }, () -> log.error("Order not found in order-producer-service: OrderId = {}", orderEventDTO.orderId()));
+        order.setStatus(orderEventDTO.status());
+        orderRepository.save(order);
 
+        log.info("Order status updated successfully in DB: OrderId = {}, New Status = {}",
+                order.getId(),
+                order.getStatus()
+        );
     }
 }
