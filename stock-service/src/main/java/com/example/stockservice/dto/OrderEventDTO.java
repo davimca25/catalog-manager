@@ -8,11 +8,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public record OrderEventDTO(UUID orderId,
-                            String userName,
-                            Status status,
-                            LocalDateTime createdAt,
-                            List<OrderItemEventDTO> items
+public record OrderEventDTO(
+        UUID orderId,
+        String userName,
+        Status status,
+        LocalDateTime createdAt,
+        List<OrderItemEventDTO> items
 ) implements Serializable {
     public record OrderItemEventDTO(
             UUID productId,
