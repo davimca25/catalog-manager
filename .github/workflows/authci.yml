@@ -1,15 +1,15 @@
-name: Order Service CI
+name: Auth Service CI
 
 on:
   workflow_dispatch:
   push:
     branches: ["main"]
     paths:
-      - "order-producer-service/**"
+      - "auth-service/**"
   pull_request:
     branches: ["main"]
-    paths:
-      - "order-producer-service/**"
+    paths: 
+      - "auth-service/**"
 
 jobs:
   build-and-test:
@@ -26,6 +26,6 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-      - name: Build and test 
-        working-directory: ./order-producer-service
+      - name: Build and test
+        working-directory: ./auth-service
         run: mvn clean verify
