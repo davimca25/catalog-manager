@@ -1,10 +1,10 @@
-package com.example.auth_service.controller;
+package com.example.authservice.controller;
 
-import com.example.auth_service.dto.UserRequestDTO;
-import com.example.auth_service.dto.UserResponseDTO;
-import com.example.auth_service.model.User;
-import com.example.auth_service.service.JwtService;
-import com.example.auth_service.service.UserService;
+import com.example.authservice.dto.UserRequestDTO;
+import com.example.authservice.dto.UserResponseDTO;
+import com.example.authservice.model.User;
+import com.example.authservice.service.JwtService;
+import com.example.authservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

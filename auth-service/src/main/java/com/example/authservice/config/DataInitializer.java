@@ -1,8 +1,8 @@
-package com.example.auth_service.config;
+package com.example.authservice.config;
 
-import com.example.auth_service.model.Role;
-import com.example.auth_service.model.RoleName;
-import com.example.auth_service.repository.RoleRepository;
+import com.example.authservice.model.Role;
+import com.example.authservice.model.RoleName;
+import com.example.authservice.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;

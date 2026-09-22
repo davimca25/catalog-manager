@@ -1,6 +1,6 @@
-package com.example.auth_service.service;
+package com.example.authservice.service;
 
-import com.example.auth_service.model.User;
+import com.example.authservice.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

@@ -1,14 +1,13 @@
-package com.example.auth_service.service;
+package com.example.authservice.service;
 
-import com.example.auth_service.dto.UserRequestDTO;
-import com.example.auth_service.dto.UserResponseDTO;
-import com.example.auth_service.model.Role;
-import com.example.auth_service.model.RoleName;
-import com.example.auth_service.model.User;
-import com.example.auth_service.repository.RoleRepository;
-import com.example.auth_service.repository.UserRepository;
+import com.example.authservice.dto.UserRequestDTO;
+import com.example.authservice.dto.UserResponseDTO;
+import com.example.authservice.model.Role;
+import com.example.authservice.model.RoleName;
+import com.example.authservice.model.User;
+import com.example.authservice.repository.RoleRepository;
+import com.example.authservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

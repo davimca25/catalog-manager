@@ -1,7 +1,6 @@
-package com.example.auth_service.model;
+package com.example.authservice.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

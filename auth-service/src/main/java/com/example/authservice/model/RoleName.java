@@ -1,4 +1,4 @@
-package com.example.auth_service.model;
+package com.example.authservice.model;
 
 public enum RoleName {
     ROLE_USER, ROLE_ADMIN

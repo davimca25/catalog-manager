@@ -1,4 +1,4 @@
-package com.example.auth_service.config;
+package com.example.authservice.config;
 
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;

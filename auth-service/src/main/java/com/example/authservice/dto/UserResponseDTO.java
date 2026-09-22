@@ -1,6 +1,5 @@
-package com.example.auth_service.dto;
+package com.example.authservice.dto;
 
-import com.example.auth_service.model.Role;
 import lombok.Builder;
 
 import java.util.List;

@@ -1,6 +1,6 @@
-package com.example.auth_service.config;
+package com.example.authservice.config;
 
-import com.example.auth_service.service.JwtService;
+import com.example.authservice.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
