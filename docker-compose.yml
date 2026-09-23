@@ -11,6 +11,14 @@ services:
     volumes:
       - pgdata_auth:/var/lib/postgresql/data
 
+  auth-service: 
+    build: ./auth-service
+    container_name: auth_service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-auth
+
   postgres-order:
     image: postgres:16.14-alpine
     container_name: postgres_order_db
@@ -22,6 +30,15 @@ services:
       - "5434:5432"
     volumes:
       - pgdata_order:/var/lib/postgresql/data
+
+  order-service:
+    build: ./order-producer-service
+    container_name: order_service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres-order
+      - rabbitmq
 
   postgres-batch:
     image: postgres:16.14-alpine
@@ -43,6 +60,16 @@ services:
     volumes:
       - mongodata_batch:/data/db
 
+  batch-service:
+    build: ./batch-service
+    container_name: batch_service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres-batch
+      - mongo-batch
+      - rabbitmq
+
   postgres-stock:
     image: postgres:16.14-alpine
     container_name: postgres_stock_db
@@ -54,6 +81,15 @@ services:
       - "5436:5432"
     volumes:
       - pgdata_stock:/var/lib/postgresql/data
+
+  stock-service:
+    build: ./stock-service
+    container_name: stock-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - postgres-stock
+      - rabbitmq
 
   rabbitmq:
     image: rabbitmq:3.13-management-alpine

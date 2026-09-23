@@ -1,8 +1,38 @@
 spring.application.name=order-producer-service
 server.port=8081
-spring.datasource.url=jdbc:postgresql://localhost:1234/order
+
+spring.datasource.url=jdbc:postgresql://postgres-order:5434/order-service
 spring.datasource.username=
 spring.datasource.password=
 
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+spring.rabbitmq.host=rabbitmq
+spring.rabbitmq.port=${RABBITMQ_PORT:5672}
+spring.rabbitmq.username=${RABBITMQ_USER:guest}
+spring.rabbitmq.password=${RABBITMQ_PASS:guest}
+
+#orderResponse
+rabbitmq.queue.order.response.name=order.response.queue
+rabbitmq.exchange.order.response.name=order.response.exchange
+rabbitmq.routing.order.response.key=order.response.routing.key
+
+# productSync
+rabbitmq.queue.product.stock.name=product.stock.queue
+rabbitmq.exchange.product.stock.name=product.stock.exchange
+rabbitmq.routing.product.stock.key=product.stock.routing.key
+
+# producer
+
+rabbitmq.exchange.order.created.name=order.created.exchange
+rabbitmq.routing.order.created.key=order.created.routing.key
+
+# producer
+
+rabbitmq.exchange.product.created.name=product.created.exchange
+rabbitmq.routing.product.created.key=product.created.routing.key
+
 #secret_key
-api.security.token.secret=
+api.security.token.secret= secret key here
