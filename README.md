@@ -1,21 +1,21 @@
 # 🛒 Projeto E-Commerce - Microsserviços Orientados a Eventos
 
 ## 📚 Sobre o Projeto
-Este projeto é um sistema de e-commerce robusto construído sobre uma arquitetura de microsserviços baseada em eventos (Event-Driven Architecture)[cite: 1]. O ecossistema foi projetado utilizando o padrão **Saga (Choreography)** para garantir o desacoplamento, a alta disponibilidade e a consistência dos dados através de comunicação assíncrona[cite: 6].
+Este projeto é um sistema de e-commerce robusto construído sobre uma arquitetura de microsserviços baseada em eventos (Event-Driven Architecture). O ecossistema foi projetado utilizando o padrão **Saga (Choreography)** para garantir o desacoplamento, a alta disponibilidade e a consistência dos dados através de comunicação assíncrona.
 
 ##  Arquitetura
-A comunicação entre os domínios de negócio foi desenhada com total isolamento de responsabilidades e bancos de dados (Database per Service)[cite: 1, 5]. O fluxo principal segue a estrutura:
+A comunicação entre os domínios de negócio foi desenhada com total isolamento de responsabilidades e bancos de dados (Database per Service). O fluxo principal segue a estrutura:
 
-`Auth -> Order Producer -> Batch (Producer/Consumer) -> Stock Consumer`[cite: 1]
+`Auth -> Order Producer -> Batch (Producer/Consumer) -> Stock Consumer`
 
 ### Microsserviços
-*   **Auth-Service (Porta 8080):** Guardião do sistema. Responsável por validar credenciais de usuários e emitir tokens JWT (*JSON Web Token*) de forma 100% *stateless* via HTTP/REST[cite: 1, 6]. 
-*   **Order-Service (Porta 8081):** Ponto de entrada (Producer). Recebe pedidos autenticados pelo JWT, salva o estado inicial na base como `PENDING` e publica o evento da compra na fila do RabbitMQ[cite: 1, 7].
-*   **Batch-Service (Porta 8082):** Motor de processamento (Consumer & Producer). Escuta a fila de pedidos, processa as regras de negócio em lotes utilizando **Spring Batch**, guarda os dados de *staging* temporários no MongoDB, e notifica o estoque sobre a conclusão[cite: 1, 6, 16].
-*   **Stock-Service (Porta 8083):** Autoridade de saldos (Consumer Final). Escuta o evento de lote processado e realiza a baixa (decremento de quantidade) do produto em seu banco de dados exclusivo[cite: 1, 5].
+*   **Auth-Service (Porta 8080):** Guardião do sistema. Responsável por validar credenciais de usuários e emitir tokens JWT (*JSON Web Token*) de forma 100% *stateless* via HTTP/REST. 
+*   **Order-Service (Porta 8081):** Ponto de entrada (Producer). Recebe pedidos autenticados pelo JWT, salva o estado inicial na base como `PENDING` e publica o evento da compra na fila do RabbitMQ.
+*   **Batch-Service (Porta 8082):** Motor de processamento (Consumer & Producer). Escuta a fila de pedidos, processa as regras de negócio em lotes utilizando **Spring Batch**, guarda os dados de *staging* temporários no MongoDB, e notifica o estoque sobre a conclusão.
+*   **Stock-Service (Porta 8083):** Autoridade de saldos (Consumer Final). Escuta o evento de lote processado e realiza a baixa (decremento de quantidade) do produto em seu banco de dados exclusivo.
 
 ##  Infraestrutura Local (Docker Compose)
-Toda a infraestrutura de dados e mensageria é gerenciada via Docker. O arquivo `docker-compose.yml` unificado na raiz do repositório sobe os seguintes serviços[cite: 6]:
+Toda a infraestrutura de dados e mensageria é gerenciada via Docker. O arquivo `docker-compose.yml` unificado na raiz do repositório sobe os seguintes serviços:
 
 *   **Bancos de Dados PostgreSQL Isolados:**
     *   `postgres-auth` (Porta 5433)
