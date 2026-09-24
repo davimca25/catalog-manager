@@ -4,6 +4,7 @@ import com.example.orderproducerservice.dto.Action;
 import com.example.orderproducerservice.dto.ProductEventDTO;
 import com.example.orderproducerservice.dto.ProductRequestDTO;
 import com.example.orderproducerservice.dto.ProductResponseDTO;
+import com.example.orderproducerservice.exception.ResourceNotFoundException;
 import com.example.orderproducerservice.model.Product;
 import com.example.orderproducerservice.repository.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -66,7 +67,7 @@ public class ProductService {
 
     @Transactional
     public ProductResponseDTO updateProduct(UUID id, ProductRequestDTO productRequestDTO) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found."));
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found."));
 
         product.setName(productRequestDTO.name());
         product.setPrice(productRequestDTO.price());
@@ -92,7 +93,7 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(UUID id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found."));
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found."));
 
         product.setActive(false);
         productRepository.save(product);
