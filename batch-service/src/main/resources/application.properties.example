@@ -1,0 +1,24 @@
+spring.application.name=batch-service
+server.port=8082
+
+spring.datasource.url=jdbc:postgresql://postgres-batch:5432/batch-service
+spring.datasource.username=postgres
+spring.datasource.password=12345
+spring.jpa.hibernate.ddl-auto=update
+
+spring.mongodb.uri=mongodb://mongo-batch:27017/batch_staging_db
+spring.mongodb.representation.uuid=standard
+
+spring.rabbitmq.host=rabbitmq
+spring.rabbitmq.port=${RABBITMQ_PORT:5672}
+spring.rabbitmq.username=${RABBITMQ_USER:guest}
+spring.rabbitmq.password=${RABBITMQ_PASS:guest}
+
+# receive from order-service
+rabbitmq.queue.order.created.name=order.created.queue
+rabbitmq.exchange.order.created.name=order.created.exchange
+rabbitmq.routing.order.created.key=order.created.routing.key
+
+# send to stock-service
+rabbitmq.exchange.stock.decrement.name=stock.decrement.exchange
+rabbitmq.routing.stock.decrement.key=stock.decrement.routing.key

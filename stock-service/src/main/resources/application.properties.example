@@ -1,0 +1,33 @@
+spring.application.name=stock-service
+server.port=8083
+
+spring.datasource.url=jdbc:postgresql://postgres-stock:5432/stock-service
+spring.datasource.username=postgres
+spring.datasource.password=12345
+
+spring.jpa.hibernate.ddl-auto=update
+
+# RabbitMQ Credentials
+
+spring.rabbitmq.host=rabbitmq
+spring.rabbitmq.port=${RABBITMQ_PORT:5672}
+spring.rabbitmq.username=${RABBITMQ_USER:guest}
+spring.rabbitmq.password=${RABBITMQ_PASS:guest}
+
+# from batch-service
+rabbitmq.queue.stock.decrement.name=stock.decrement.queue
+rabbitmq.exchange.stock.decrement.name=stock.decrement.exchange
+rabbitmq.routing.stock.decrement.key=stock.decrement.routing.key
+
+# from order-service
+rabbitmq.queue.product.created.name=product.created.queue
+rabbitmq.exchange.product.created.name=product.created.exchange
+rabbitmq.routing.product.created.key=product.created.routing.key
+
+# to order-service
+rabbitmq.exchange.order.response.name=order.response.exchange
+rabbitmq.routing.order.response.key=order.response.routing.key
+
+# to order-service
+rabbitmq.exchange.product.stock.name=product.stock.exchange
+rabbitmq.routing.product.stock.key=product.stock.routing.key
