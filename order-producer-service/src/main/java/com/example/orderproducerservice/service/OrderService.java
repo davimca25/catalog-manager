@@ -4,6 +4,7 @@ import com.example.orderproducerservice.dto.OrderEventDTO;
 import com.example.orderproducerservice.dto.OrderItemRequestDTO;
 import com.example.orderproducerservice.dto.OrderRequestDTO;
 import com.example.orderproducerservice.dto.OrderResponseDTO;
+import com.example.orderproducerservice.exception.ResourceNotFoundException;
 import com.example.orderproducerservice.model.Order;
 import com.example.orderproducerservice.model.OrderItem;
 import com.example.orderproducerservice.model.Product;
@@ -40,10 +41,10 @@ public class OrderService {
 
         for (OrderItemRequestDTO request : orderRequestDTO.items()) {
             Product product = productRepository.findById(request.productId())
-                    .orElseThrow(() -> new RuntimeException("Product not found."));
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found."));
 
             if (!product.isActive()) {
-                throw new RuntimeException("Product: " + product.getName() + " not available.");
+                throw new ResourceNotFoundException("Product: " + product.getName() + " not available.");
             }
 
             OrderItem orderItem = new OrderItem(product, request.quantity());
@@ -113,7 +114,7 @@ public class OrderService {
 
     public void deleteOrder(UUID id) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found."));
 
         orderRepository.delete(order);
     }
