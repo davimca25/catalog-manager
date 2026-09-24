@@ -20,12 +20,12 @@ Toda a infraestrutura de dados e mensageria é gerenciada via Docker. O arquivo 
 *   **Bancos de Dados PostgreSQL Isolados:**
     *   `postgres-auth` (Porta 5433)
     *   `postgres-order` (Porta 5434)
-    *   `postgres-batch` (Porta 5435) - Armazena os metadados internos do Spring Batch[cite: 16].
+    *   `postgres-batch` (Porta 5435) - Armazena os metadados internos do Spring Batch.
     *   `postgres-stock` (Porta 5436)
 *   **Banco de Dados NoSQL:**
-    *   `mongo-batch` (Porta 27017) - Área de *staging* de documentos para leitura em lotes[cite: 16].
+    *   `mongo-batch` (Porta 27017) - Área de *staging* de documentos para leitura em lotes.
 *   **Mensageria:**
-    *   `rabbitmq` (Porta 5672 para conexões, 15672 para painel de gerenciamento)[cite: 1].
+    *   `rabbitmq` (Porta 5672 para conexões, 15672 para painel de gerenciamento).
 
 **Para iniciar os serviços localmente:**
 ```bash
