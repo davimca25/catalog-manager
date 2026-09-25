@@ -3,6 +3,7 @@ package com.example.orderproducerservice.controller;
 import com.example.orderproducerservice.dto.ProductRequestDTO;
 import com.example.orderproducerservice.dto.ProductResponseDTO;
 import com.example.orderproducerservice.service.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/products")
