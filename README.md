@@ -42,7 +42,7 @@ O projeto implementa uma esteira de CI nativa utilizando o GitHub Actions.
 * O comando mvn clean package é executado, validando a compilação do código e testando o comportamento com JUnit e Mockito de ponta a ponta, bloqueando qualquer quebra no repositório.
 
 ##  Tecnologias Utilizadas
-Linguagem & Framework: Java 21, Spring Boot 3.x
+* Linguagem & Framework: Java 21, Spring Boot 3.x
 
 * Segurança: Spring Security, JWT (JJWT)
 
@@ -50,8 +50,8 @@ Linguagem & Framework: Java 21, Spring Boot 3.x
 
 * Mensageria: RabbitMQ (Spring AMQP)
 
-Persistência: Spring Data JPA, PostgreSQL Driver, Spring Data MongoDB
+* Persistência: Spring Data JPA, PostgreSQL Driver, Spring Data MongoDB
 
-Utilitários: Lombok
+* Utilitários: Lombok
 
-DevOps & Automação: Docker, Docker Compose, GitHub Actions
+* DevOps & Automação: Docker, Docker Compose, GitHub Actions
